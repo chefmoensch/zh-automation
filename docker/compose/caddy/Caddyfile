@@ -1,0 +1,15 @@
+{
+    email <mini-mail>
+    http_port 80
+    https_port 443
+    log default {
+        level info
+    }
+}
+
+0.0.0.0:443,
+<prod-server-ip>:443,
+<prod-server-domain>:443,
+<prod-server-domain-www>:443 {
+    reverse_proxy http://ical2web.local:8088
+}

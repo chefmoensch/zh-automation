@@ -1,0 +1,58 @@
+version: "3.8"
+services:
+  mongodb:
+
+    image: mongo
+    container_name: mongodb
+    hostname: mongodb.local
+    ports:
+      - 27017:27017
+    volumes:
+      - din-lokale-pfad:/data
+      #- min-lokale-pfad:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    hostname: mongo-express.local
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongodb
+    environment:
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=pass
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=user
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+
+  ical2web:
+    image: quarkus/ical2web-jvm:1.1.1
+    container_name: ical2web
+    hostname: ical2web.local
+    restart: always
+    ports:
+      - 8088:8088
+    depends_on:
+      - mongo-express
+    environment:
+      - CT_LOGINTOKEN=${CT_LOGINTOKEN} # please replace this value with the current api token from churchtools
+      - QUARKUS_LOG_LEVEL=INFO
+      - QUARKUS_HTTP_CORS=true
+      - QUARKUS_HTTP_CORS_ORIGINS=${QUARKUS_HTTP_CORS_ORIGINS}
+      - QUARKUS_HTTP_CORS_METHODS=GET, OPTIONS
+      - QUARKUS_HTTP_CORS_HEADERS=accept, authorization, content-type, x-requested-with
+      - QUARKUS_MONGODB_CONNECTION_STRING=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb.local:27017
+      # SSL config (if needed in future)
+      #- QUARKUS_HTTP_SSL_PORT=8888
+      #- QUARKUS_HTTP_SSL_CERTIFICATE_FILES=/min-lokale-pfad/cert.pem
+      #- QUARKUS_HTTP_SSL_CERTIFICATE_KEY-FILES=/min-lokale-pfad/cert.pem
+      #- QUARKUS_HTTP_INSECURE-REQUESTS=redirect
+volumes:
+  data: {}
+
+networks:
+  default:
+    name: ical2web-network
