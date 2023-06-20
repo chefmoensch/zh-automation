@@ -8,7 +8,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - din-lokale-pfad:/data
+      - "data:/data"
       #- min-lokale-pfad:/data
     environment:
       - MONGO_INITDB_ROOT_USERNAME=user
@@ -37,14 +37,14 @@ services:
       - 8088:8088
     depends_on:
       - mongo-express
-    environment:
-      - CT_LOGINTOKEN=${CT_LOGINTOKEN} # please replace this value with the current api token from churchtools
-      - QUARKUS_LOG_LEVEL=INFO
-      - QUARKUS_HTTP_CORS=true
-      - QUARKUS_HTTP_CORS_ORIGINS=${QUARKUS_HTTP_CORS_ORIGINS}
-      - QUARKUS_HTTP_CORS_METHODS=GET, OPTIONS
-      - QUARKUS_HTTP_CORS_HEADERS=accept, authorization, content-type, x-requested-with
-      - QUARKUS_MONGODB_CONNECTION_STRING=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb.local:27017
+    #environment:
+      #- CT_LOGINTOKEN=${CT_LOGINTOKEN} # please replace this value with the current api token from churchtools
+      #- QUARKUS_LOG_LEVEL=INFO
+      #- QUARKUS_HTTP_CORS=true
+      #- QUARKUS_HTTP_CORS_ORIGINS=${QUARKUS_HTTP_CORS_ORIGINS}
+      #- QUARKUS_HTTP_CORS_METHODS=GET, OPTIONS
+      #- QUARKUS_HTTP_CORS_HEADERS=accept, authorization, content-type, x-requested-with
+      #- QUARKUS_MONGODB_CONNECTION_STRING=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb.local:27017
       # SSL config (if needed in future)
       #- QUARKUS_HTTP_SSL_PORT=8888
       #- QUARKUS_HTTP_SSL_CERTIFICATE_FILES=/min-lokale-pfad/cert.pem
