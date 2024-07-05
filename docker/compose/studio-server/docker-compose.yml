@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  studio-server:
+    image: allebb/studio-server:latest
+    container_name: studio-server
+    ports:
+      - 5432:5432
+      - 50059:50059
+      - 8543:8543
+    restart: unless-stopped	
+    environment: 
+      TZ: "Europe/Zurich"
+    volumes: 
+      - ./hooks/:/var/studio-server/hooks/
+      - ./database/:/var/studio-server/database/
+      - ./backups/:/var/studio-server/backups/
+      - ./jobs/:/etc/cron.d/
+    network_mode: bridge
